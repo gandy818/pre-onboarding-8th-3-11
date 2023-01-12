@@ -7,9 +7,7 @@ const Index = () => {
   const [index, setIndex] = useState(-1);
   const ref = useRef<HTMLUListElement>(null);
 
-  const handleInputTxt = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGetInputValue(e.target.value);
-  };
+  //api 호출 함수
   const updateData = () => {
     if (getInputValue !== '') {
       axios
@@ -27,16 +25,21 @@ const Index = () => {
     }
   };
 
+  //디바운싱 (0.2초마다 실행)
   useEffect(() => {
     const debounce = setTimeout(() => {
       updateData();
-    }, 100);
+    }, 200);
     return () => {
       clearTimeout(debounce);
     };
   }, [getInputValue]);
 
-  const handleClickEvent = (index: number) => {
+  const handleInputTxt = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGetInputValue(e.target.value);
+  };
+
+  const handleChangeEvent = (index: number) => {
     setIndex(index);
   };
 
@@ -45,7 +48,6 @@ const Index = () => {
 
     if (listRef !== null) {
       const itemList = listRef.children;
-
       //화살표 아래키 눌렀을 때
       if (e.key === 'ArrowDown') {
         setIndex(prev => prev + 1);
@@ -75,9 +77,7 @@ const Index = () => {
   return (
     <div className="App">
       <input
-        className="bg-gray-50 border border-gray-300 
-                text-gray-900 text-sm rounded-lg focus:ring-blue-500
-                focus:border-blue-500"
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg"
         type="type"
         value={getInputValue}
         onChange={handleInputTxt}
@@ -89,7 +89,7 @@ const Index = () => {
               <li
                 key={item.sickCd}
                 onChange={() => {
-                  handleClickEvent(index);
+                  handleChangeEvent(index);
                 }}
               >
                 {item.sickNm.includes(getInputValue) && getInputValue !== '' ? (
